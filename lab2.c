@@ -42,12 +42,12 @@ Matrix multiply_matrix (Matrix A, Matrix B){
   double sum;
   for (int resrow = 0; resrow < B.rows; resrow++){
       for (int rescol = 0; rescol < B.cols; rescol++){
-	  sum = 0.0;
-	  for (int i = 0; i < A.cols; i++){
-	      sum += get_item (A, resrow, i) * get_item (B, i, rescol);
-      }
-	  set_item (result, resrow, rescol, sum);
-	}
+          sum = 0.0;
+          for (int i = 0; i < A.cols; i++){
+              sum += get_item (A, resrow, i) * get_item (B, i, rescol);
+          }
+          set_item (result, resrow, rescol, sum);
+	  }
   }
   return result;
 }
@@ -112,22 +112,21 @@ int main (){
   int size;
   printf ("Vvedite razmernost matritsi\n");
   scanf ("%d", &size);
-  double eps = 1000000;
+  double eps = 1e6;
   int num_iter = 0;
-  double tau = 0.01;
-  Matrix xn = create_matrix(size, 1, 0);
+  double tau = 1e-02;
+  Matrix XN = create_matrix(size, 1, 0);
   Matrix A = createEye(size);
   Matrix X = create_matrix(size, 1, 1);
   Matrix B = multiply_matrix(A, X);
-  Matrix xn1 = create_matrix(size, 1, 0);
-  while (eps > 0.001){
-      xn1 = subtract_matrix(xn, multiply_scalar(subtract_matrix(multiply_matrix(A, xn), B), tau));
-      eps = find_max_item(abs_matrix(subtract_matrix(xn,xn1)));
+  while (eps > 1e-03){
+      Matrix XN1 = subtract_matrix(XN, multiply_scalar(subtract_matrix(multiply_matrix(A, XN), B), tau));
+      eps = find_max_item(abs_matrix(subtract_matrix(XN,XN1)));
       num_iter++;
-      xn = xn1;
+      XN = XN1;
       printf ("%d %g\n", num_iter, eps);
   }
-  print_matrix(xn);
+  print_matrix(XN);
   system("pause");
   return 0;
 }
